@@ -1,0 +1,92 @@
+<div class="search-container">
+  <div class="search-form">
+    <div class="search-input-wrapper">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+      <input 
+        type="text" 
+        [(ngModel)]="marqueRecherche"
+        (input)="onSearchInput()"
+        placeholder="Rechercher par marque ou modèle (ex: BMW, Mercedes...)"
+        class="search-input"
+      />
+      <button *ngIf="marqueRecherche" (click)="clearSearch()" class="clear-button" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <button (click)="searchAutoList()" class="search-button">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+      <span>Rechercher</span>
+    </button>
+  </div>
+
+  <div class="results-info" *ngIf="filteredAutos.length > 0">
+    <p>{{ filteredAutos.length }} résultat(s) trouvé(s)</p>
+  </div>
+
+  <div class="results-container" *ngIf="filteredAutos.length > 0">
+    <div class="auto-grid">
+      <div *ngFor="let auto of filteredAutos; let i = index" 
+           class="auto-card" 
+           [style.animation-delay]="i * 0.1 + 's'">
+        <div class="auto-card-header">
+          <div class="auto-badge">{{ auto.marque }}</div>
+          <div class="auto-availability" [class.low-stock]="auto.disponibilite <= 3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 7h-9"></path>
+              <path d="M14 17H5"></path>
+              <circle cx="17" cy="17" r="3"></circle>
+              <circle cx="7" cy="7" r="3"></circle>
+            </svg>
+            {{ auto.disponibilite }} disponible(s)
+          </div>
+        </div>
+        
+        <h3 class="auto-model">{{ auto.modele }}</h3>
+        
+        <div class="auto-specs">
+          <div class="spec-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+              <polyline points="17 6 23 6 23 12"></polyline>
+            </svg>
+            <span>{{ auto.puissance }} CV</span>
+          </div>
+          <div class="spec-item price">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="1" x2="12" y2="23"></line>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+            <span>{{ auto.prix.toLocaleString() }} DT</span>
+          </div>
+        </div>
+        
+        <button (click)="selectedAuto(auto)" class="view-button">
+          <span>Voir les détails</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"></path>
+            <path d="m12 5 7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="no-results" *ngIf="searched && filteredAutos.length === 0">
+    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"></circle>
+      <path d="m21 21-4.35-4.35"></path>
+    </svg>
+    <h3>Aucun résultat trouvé</h3>
+    <p>Aucune voiture ne correspond à "{{ marqueRecherche }}"</p>
+    <p class="suggestion">Essayez: BMW, Mercedes, Audi, Tesla, Porsche...</p>
+  </div>
+</div>
